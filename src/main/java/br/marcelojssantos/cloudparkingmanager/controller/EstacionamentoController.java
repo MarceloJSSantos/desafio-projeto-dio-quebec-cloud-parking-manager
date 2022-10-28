@@ -4,9 +4,8 @@ import br.marcelojssantos.cloudparkingmanager.dto.EstacionamentoDTO;
 import br.marcelojssantos.cloudparkingmanager.mapper.EstacionamentoMapper;
 import br.marcelojssantos.cloudparkingmanager.model.Estacionamento;
 import br.marcelojssantos.cloudparkingmanager.service.EstacionamentoService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,8 +23,20 @@ public class EstacionamentoController {
     }
 
     @GetMapping
-    public List<EstacionamentoDTO> findAll(){
-        List<Estacionamento> listaEstacionamento = estacionamentoService.findAll();
-        return estacionamentoMapper.toListaEstacionamentoDTO(listaEstacionamento);
+    public ResponseEntity<List<EstacionamentoDTO>> findAll(){
+        var listaEstacionamento = estacionamentoService.findAll();
+        return ResponseEntity.ok(estacionamentoMapper.toListaEstacionamentoDTO(listaEstacionamento));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EstacionamentoDTO> findById(@PathVariable String id){
+        var estacionamento = estacionamentoService.findById(id);
+        return ResponseEntity.ok(estacionamentoMapper.toEstacionamentoDTO(estacionamento));
+    }
+
+    @PostMapping
+    public ResponseEntity<EstacionamentoDTO> create(@RequestBody EstacionamentoDTO estacionamentoDTO){
+        var estacionamento =estacionamentoService.create(estacionamentoDTO);
+        return ResponseEntity.ok(estacionamentoMapper.toEstacionamentoDTO(estacionamento));
     }
 }

@@ -35,8 +35,26 @@ public class EstacionamentoService {
         return estacionamentoMap.values().stream().collect(Collectors.toList());
     }
 
+    public Estacionamento findById(String id){
+        return estacionamentoMap.get(id);
+    }
+
+    public Estacionamento create(EstacionamentoDTO estacionamentoDTO) {
+        var id = getUUID('-');
+        var licenca = getUUID('|');
+        Estacionamento estacionamento = new Estacionamento(id,
+                licenca,
+                estacionamentoDTO.getEstado(),
+                estacionamentoDTO.getModelo(),
+                estacionamentoDTO.getCor());
+        estacionamentoMap.put(id, estacionamento);
+        return estacionamento;
+
+    }
+
     private static String getUUID(Character caracter) {
         var uuid = UUID.randomUUID().toString().replace("-", caracter.toString());
         return uuid;
     }
+
 }
