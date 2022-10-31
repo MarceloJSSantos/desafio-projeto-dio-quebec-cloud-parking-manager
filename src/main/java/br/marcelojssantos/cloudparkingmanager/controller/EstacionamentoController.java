@@ -1,9 +1,11 @@
 package br.marcelojssantos.cloudparkingmanager.controller;
 
+import br.marcelojssantos.cloudparkingmanager.dto.EstacionamentoCreateDTO;
 import br.marcelojssantos.cloudparkingmanager.dto.EstacionamentoDTO;
 import br.marcelojssantos.cloudparkingmanager.mapper.EstacionamentoMapper;
 import br.marcelojssantos.cloudparkingmanager.model.Estacionamento;
 import br.marcelojssantos.cloudparkingmanager.service.EstacionamentoService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,8 +37,9 @@ public class EstacionamentoController {
     }
 
     @PostMapping
-    public ResponseEntity<EstacionamentoDTO> create(@RequestBody EstacionamentoDTO estacionamentoDTO){
-        var estacionamento =estacionamentoService.create(estacionamentoDTO);
-        return ResponseEntity.ok(estacionamentoMapper.toEstacionamentoDTO(estacionamento));
+    public ResponseEntity<EstacionamentoDTO> create(@RequestBody EstacionamentoCreateDTO estacionamentoCreateDTO){
+        var estacionamento =estacionamentoService.create(estacionamentoCreateDTO);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(estacionamentoMapper.toEstacionamentoCreateDTO(estacionamento));
     }
 }

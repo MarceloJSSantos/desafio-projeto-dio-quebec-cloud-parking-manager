@@ -1,9 +1,11 @@
 package br.marcelojssantos.cloudparkingmanager.service;
 
+import br.marcelojssantos.cloudparkingmanager.dto.EstacionamentoCreateDTO;
 import br.marcelojssantos.cloudparkingmanager.dto.EstacionamentoDTO;
 import br.marcelojssantos.cloudparkingmanager.model.Estacionamento;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,14 +41,14 @@ public class EstacionamentoService {
         return estacionamentoMap.get(id);
     }
 
-    public Estacionamento create(EstacionamentoDTO estacionamentoDTO) {
+    public Estacionamento create(EstacionamentoCreateDTO estacionamentoCreateDTO) {
         var id = getUUID('-');
-        var licenca = getUUID('|');
         Estacionamento estacionamento = new Estacionamento(id,
-                licenca,
-                estacionamentoDTO.getEstado(),
-                estacionamentoDTO.getModelo(),
-                estacionamentoDTO.getCor());
+                estacionamentoCreateDTO.getLicenca(),
+                estacionamentoCreateDTO.getEstado(),
+                estacionamentoCreateDTO.getModelo(),
+                estacionamentoCreateDTO.getCor());
+        estacionamento.setDataEntrada(LocalDateTime.now());
         estacionamentoMap.put(id, estacionamento);
         return estacionamento;
 

@@ -1,5 +1,6 @@
 package br.marcelojssantos.cloudparkingmanager.mapper;
 
+import br.marcelojssantos.cloudparkingmanager.dto.EstacionamentoCreateDTO;
 import br.marcelojssantos.cloudparkingmanager.dto.EstacionamentoDTO;
 import br.marcelojssantos.cloudparkingmanager.model.Estacionamento;
 import org.modelmapper.ModelMapper;
@@ -14,6 +15,10 @@ public class EstacionamentoMapper {
     private final ModelMapper MODEL_MAPPER = new ModelMapper();
 
     public EstacionamentoDTO toEstacionamentoDTO(Estacionamento estacionamento){
+        return MODEL_MAPPER.map(estacionamento, EstacionamentoDTO.class);
+    }
+
+    public EstacionamentoDTO toEstacionamentoCreateDTO(Estacionamento estacionamento){
         return MODEL_MAPPER.map(estacionamento, EstacionamentoDTO.class);
     }
 
