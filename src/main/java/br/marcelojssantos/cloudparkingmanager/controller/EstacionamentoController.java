@@ -3,8 +3,9 @@ package br.marcelojssantos.cloudparkingmanager.controller;
 import br.marcelojssantos.cloudparkingmanager.dto.EstacionamentoCreateDTO;
 import br.marcelojssantos.cloudparkingmanager.dto.EstacionamentoDTO;
 import br.marcelojssantos.cloudparkingmanager.mapper.EstacionamentoMapper;
-import br.marcelojssantos.cloudparkingmanager.model.Estacionamento;
 import br.marcelojssantos.cloudparkingmanager.service.EstacionamentoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/estacionamentos")
+@Tag(name = "EstacionamentoController")
 public class EstacionamentoController {
 
     private final EstacionamentoService estacionamentoService;
@@ -25,18 +27,21 @@ public class EstacionamentoController {
     }
 
     @GetMapping
+    @Operation(summary = "Retorna todos estacionamentos")
     public ResponseEntity<List<EstacionamentoDTO>> findAll(){
         var listaEstacionamento = estacionamentoService.findAll();
         return ResponseEntity.ok(estacionamentoMapper.toListaEstacionamentoDTO(listaEstacionamento));
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Retorna um estacionamento conforme o id passado")
     public ResponseEntity<EstacionamentoDTO> findById(@PathVariable String id){
         var estacionamento = estacionamentoService.findById(id);
         return ResponseEntity.ok(estacionamentoMapper.toEstacionamentoDTO(estacionamento));
     }
 
     @PostMapping
+    @Operation(summary = "Cria um novo estacionamento conforme dados passados")
     public ResponseEntity<EstacionamentoDTO> create(@RequestBody EstacionamentoCreateDTO estacionamentoCreateDTO){
         var estacionamento =estacionamentoService.create(estacionamentoCreateDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
