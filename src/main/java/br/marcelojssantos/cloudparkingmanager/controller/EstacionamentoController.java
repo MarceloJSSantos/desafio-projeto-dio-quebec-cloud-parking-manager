@@ -47,4 +47,18 @@ public class EstacionamentoController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(estacionamentoMapper.toEstacionamentoCreateDTO(estacionamento));
     }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Deleta um estacionamento conforme o id passado")
+    public ResponseEntity delete(@PathVariable String id){
+        estacionamentoService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Atualiza um estacionamento conforme dados passados")
+    public ResponseEntity<EstacionamentoDTO> update(@PathVariable String id, @RequestBody EstacionamentoCreateDTO estacionamentoCreateDTO){
+        var estacionamento =estacionamentoService.update(id, estacionamentoCreateDTO);
+        return ResponseEntity.ok(estacionamentoMapper.toEstacionamentoCreateDTO(estacionamento));
+    }
 }
