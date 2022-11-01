@@ -105,3 +105,15 @@ Ou
 ````
 
 [Referência: Migrando do Springfox Swagger 2 para o Springdoc Open API](https://stackoverflow.com/questions/59291371/migrating-from-springfox-swagger-2-to-springdoc-open-api)
+
+
+#### Tratamento de Exceções para retorno de mensagem mais amigável
+
+- Para isso foi criada a exception ``EstacionamentoNotFoundException`` com mensagem mais adequada;
+- Adequado o fluxo no método ``findById`` da classe de serviço ``ÈstacionamentoService``;
+- Incluída a configuração no ``application.properties`` para apresentação de mensagem mais adequada
+  ````properties
+  server.error.include-exception=false
+  server.error.include-stacktrace=never
+  server.error.include-message=always
+  ````

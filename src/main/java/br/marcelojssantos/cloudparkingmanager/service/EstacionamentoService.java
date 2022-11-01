@@ -1,12 +1,15 @@
 package br.marcelojssantos.cloudparkingmanager.service;
 
 import br.marcelojssantos.cloudparkingmanager.dto.EstacionamentoCreateDTO;
-import br.marcelojssantos.cloudparkingmanager.dto.EstacionamentoDTO;
 import br.marcelojssantos.cloudparkingmanager.model.Estacionamento;
+import br.marcelojssantos.cloudparkingmanager.service.exception.EstacionamentoNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,7 +41,11 @@ public class EstacionamentoService {
     }
 
     public Estacionamento findById(String id){
-        return estacionamentoMap.get(id);
+        var estacionamento = estacionamentoMap.get(id);
+        if(estacionamento == null){
+            throw new EstacionamentoNotFoundException(id);
+        }
+        return estacionamento;
     }
 
     public Estacionamento create(EstacionamentoCreateDTO estacionamentoCreateDTO) {
