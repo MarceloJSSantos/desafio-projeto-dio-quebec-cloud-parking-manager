@@ -22,24 +22,24 @@ public class EstacionamentoService {
 
     private static Map<String, Estacionamento> estacionamentoMap = new HashMap();
 
-    static {
-        var id = getUUID('-');
-        var licenca = getUUID('|');
-        Estacionamento estacionamento = new Estacionamento(id,
-                licenca,
-                "RJ",
-                "Fiat/Bravo",
-                "Branca");
-        estacionamentoMap.put(id, estacionamento);
-        id = getUUID('-');
-        licenca = getUUID('|');
-        Estacionamento estacionamento2 = new Estacionamento(id,
-                licenca,
-                "SP",
-                "VW/Gol",
-                "Preta");
-        estacionamentoMap.put(id, estacionamento2);
-    }
+//    static {
+//        var id = getUUID('-');
+//        var licenca = getUUID('|');
+//        Estacionamento estacionamento = new Estacionamento(id,
+//                licenca,
+//                "RJ",
+//                "Fiat/Bravo",
+//                "Branca");
+//        estacionamentoMap.put(id, estacionamento);
+//        id = getUUID('-');
+//        licenca = getUUID('|');
+//        Estacionamento estacionamento2 = new Estacionamento(id,
+//                licenca,
+//                "SP",
+//                "VW/Gol",
+//                "Preta");
+//        estacionamentoMap.put(id, estacionamento2);
+//    }
 
     public List<Estacionamento> findAll(){
         return estacionamentoMap.values().stream().collect(Collectors.toList());

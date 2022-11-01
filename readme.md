@@ -117,3 +117,14 @@ Ou
   server.error.include-stacktrace=never
   server.error.include-message=always
   ````
+
+#### Incluído testes de integração
+
+- Para isso foi incluída a biblioteca do Rest Assured
+  ````xml
+  <dependency>
+    <groupId>io.rest-assured</groupId>
+    <artifactId>rest-assured</artifactId>
+    <scope>test</scope>
+  <dependency>
+  ````
