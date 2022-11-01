@@ -61,4 +61,11 @@ public class EstacionamentoController {
         var estacionamento =estacionamentoService.update(id, estacionamentoCreateDTO);
         return ResponseEntity.ok(estacionamentoMapper.toEstacionamentoCreateDTO(estacionamento));
     }
+
+    @PostMapping("/{id}")
+    @Operation(summary = "Registra o fechamento de um estacionamento e calcula sua conta!")
+    public ResponseEntity<EstacionamentoDTO> exit(@PathVariable String id){
+        var estacionamento = estacionamentoService.exit(id);
+        return ResponseEntity.ok(estacionamentoMapper.toEstacionamentoCreateDTO(estacionamento));
+    }
 }

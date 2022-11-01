@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAmount;
+import java.time.temporal.TemporalUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,8 +87,30 @@ public class EstacionamentoService {
         return estacionamento;
     }
 
+    public Estacionamento exit(String id) {
+        var estacionamento = findById(id);
+        estacionamento.setDataSaida(LocalDateTime.now());
+        estacionamento.setConta(calculaEstacionamento(estacionamento));
+        estacionamentoMap.put(id, estacionamento);
+        return estacionamento;
+    }
+
+    private static Double calculaEstacionamento(Estacionamento estacionamento) {
+        //como alguns estacionamentos podem vir s/ a data de entrada
+        if(estacionamento.getDataEntrada()==null)
+            estacionamento.setDataEntrada(estacionamento.getDataSaida());
+        //acrescenta sem 1 hora, mesmo se as horas forem zeradas
+        var horas = 1 + ChronoUnit.HOURS
+                .between(estacionamento.getDataEntrada(), estacionamento.getDataSaida());
+
+        var valor = horas * 1.5;
+        return valor;
+    }
+
     private static String getUUID(Character caracter) {
         var uuid = UUID.randomUUID().toString().replace("-", caracter.toString());
         return uuid;
     }
+
+
 }
