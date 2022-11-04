@@ -1,97 +1,77 @@
 package br.marcelojssantos.cloudparkingmanager.service;
 
-import br.marcelojssantos.cloudparkingmanager.dto.EstacionamentoCreateDTO;
-import br.marcelojssantos.cloudparkingmanager.mapper.EstacionamentoMapper;
 import br.marcelojssantos.cloudparkingmanager.model.Estacionamento;
+import br.marcelojssantos.cloudparkingmanager.repository.EstacionamentoRepository;
 import br.marcelojssantos.cloudparkingmanager.service.exception.EstacionamentoNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAmount;
-import java.time.temporal.TemporalUnit;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class EstacionamentoService {
 
-    private static Map<String, Estacionamento> estacionamentoMap = new HashMap();
+    private final EstacionamentoRepository estacionamentoRepository;
 
-//    static {
-//        var id = getUUID('-');
-//        var licenca = getUUID('|');
-//        Estacionamento estacionamento = new Estacionamento(id,
-//                licenca,
-//                "RJ",
-//                "Fiat/Bravo",
-//                "Branca");
-//        estacionamentoMap.put(id, estacionamento);
-//        id = getUUID('-');
-//        licenca = getUUID('|');
-//        Estacionamento estacionamento2 = new Estacionamento(id,
-//                licenca,
-//                "SP",
-//                "VW/Gol",
-//                "Preta");
-//        estacionamentoMap.put(id, estacionamento2);
-//    }
+    public EstacionamentoService(EstacionamentoRepository estacionamentoRepository) {
+        this.estacionamentoRepository = estacionamentoRepository;
+    }
 
+    @Transactional(readOnly = true)
     public List<Estacionamento> findAll(){
-        return estacionamentoMap.values().stream().collect(Collectors.toList());
+        return  estacionamentoRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public Estacionamento findById(String id){
-        var estacionamento = estacionamentoMap.get(id);
-        if(estacionamento == null){
-            throw new EstacionamentoNotFoundException(id);
-        }
+        var estacionamento = estacionamentoRepository
+                .findById(id)
+                .orElseThrow(()-> new EstacionamentoNotFoundException(id));
         return estacionamento;
     }
 
-    public Estacionamento create(EstacionamentoCreateDTO estacionamentoCreateDTO) {
+    @Transactional
+    public Estacionamento create(Estacionamento estacionamento) {
         var id = getUUID('-');
-        Estacionamento estacionamento = new Estacionamento(id,
-                estacionamentoCreateDTO.getLicenca(),
-                estacionamentoCreateDTO.getEstado(),
-                estacionamentoCreateDTO.getModelo(),
-                estacionamentoCreateDTO.getCor());
+        estacionamento.setId(id);
         estacionamento.setDataEntrada(LocalDateTime.now());
-        estacionamentoMap.put(id, estacionamento);
+        estacionamentoRepository.save(estacionamento);
         return estacionamento;
 
     }
 
+    @Transactional
     public void delete(String id){
         findById(id);
-        estacionamentoMap.remove(id);
+        estacionamentoRepository.deleteById(id);
     }
 
-    public Estacionamento update(String id, EstacionamentoCreateDTO estacionamentoCreateDTO) {
+    @Transactional
+    public Estacionamento update(String id, Estacionamento estacionamentoAtualizado) {
         Estacionamento estacionamento = findById(id);
 
-        if(estacionamentoCreateDTO.getLicenca() != null)
-            estacionamento.setLicenca(estacionamentoCreateDTO.getLicenca());
-        if(estacionamentoCreateDTO.getEstado() != null)
-            estacionamento.setEstado(estacionamentoCreateDTO.getEstado());
-        if(estacionamentoCreateDTO.getModelo() != null)
-            estacionamento.setModelo(estacionamentoCreateDTO.getModelo());
-        if(estacionamentoCreateDTO.getCor() != null)
-            estacionamento.setCor(estacionamentoCreateDTO.getCor());
+        if(estacionamentoAtualizado.getLicenca() != null)
+            estacionamento.setLicenca(estacionamentoAtualizado.getLicenca());
+        if(estacionamentoAtualizado.getEstado() != null)
+            estacionamento.setEstado(estacionamentoAtualizado.getEstado());
+        if(estacionamentoAtualizado.getModelo() != null)
+            estacionamento.setModelo(estacionamentoAtualizado.getModelo());
+        if(estacionamentoAtualizado.getCor() != null)
+            estacionamento.setCor(estacionamentoAtualizado.getCor());
 
-        estacionamentoMap.replace(id, estacionamento);
+        estacionamentoRepository.save(estacionamento);
         return estacionamento;
     }
 
-    public Estacionamento exit(String id) {
+    @Transactional
+    public Estacionamento checkOut(String id) {
         var estacionamento = findById(id);
         estacionamento.setDataSaida(LocalDateTime.now());
         estacionamento.setConta(calculaEstacionamento(estacionamento));
-        estacionamentoMap.put(id, estacionamento);
+        estacionamentoRepository.save(estacionamento);
         return estacionamento;
     }
 

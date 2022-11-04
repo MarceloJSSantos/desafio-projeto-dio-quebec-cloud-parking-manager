@@ -1,4 +1,4 @@
-package br.marcelojssantos.cloudparkingmanager;
+package br.marcelojssantos.cloudparkingmanager.config;
 
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;

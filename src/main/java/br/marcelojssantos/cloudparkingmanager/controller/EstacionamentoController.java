@@ -18,7 +18,7 @@ import java.util.List;
 public class EstacionamentoController {
 
     private final EstacionamentoService estacionamentoService;
-    private final EstacionamentoMapper estacionamentoMapper;
+    private EstacionamentoMapper estacionamentoMapper;
 
     public EstacionamentoController(EstacionamentoService estacionamentoService,
                                     EstacionamentoMapper estacionamentoMapper) {
@@ -43,7 +43,7 @@ public class EstacionamentoController {
     @PostMapping
     @Operation(summary = "Cria um novo estacionamento conforme dados passados")
     public ResponseEntity<EstacionamentoDTO> create(@RequestBody EstacionamentoCreateDTO estacionamentoCreateDTO){
-        var estacionamento =estacionamentoService.create(estacionamentoCreateDTO);
+        var estacionamento =estacionamentoService.create(estacionamentoMapper.toEstacionamentoCreate(estacionamentoCreateDTO));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(estacionamentoMapper.toEstacionamentoCreateDTO(estacionamento));
     }
@@ -58,14 +58,15 @@ public class EstacionamentoController {
     @PutMapping("/{id}")
     @Operation(summary = "Atualiza um estacionamento conforme dados passados")
     public ResponseEntity<EstacionamentoDTO> update(@PathVariable String id, @RequestBody EstacionamentoCreateDTO estacionamentoCreateDTO){
-        var estacionamento =estacionamentoService.update(id, estacionamentoCreateDTO);
+        var estacionamento =estacionamentoService
+                .update(id, estacionamentoMapper.toEstacionamentoCreate(estacionamentoCreateDTO));
         return ResponseEntity.ok(estacionamentoMapper.toEstacionamentoCreateDTO(estacionamento));
     }
 
     @PostMapping("/{id}")
     @Operation(summary = "Registra o fechamento de um estacionamento e calcula sua conta!")
-    public ResponseEntity<EstacionamentoDTO> exit(@PathVariable String id){
-        var estacionamento = estacionamentoService.exit(id);
+    public ResponseEntity<EstacionamentoDTO> checkOut(@PathVariable String id){
+        var estacionamento = estacionamentoService.checkOut(id);
         return ResponseEntity.ok(estacionamentoMapper.toEstacionamentoCreateDTO(estacionamento));
     }
 }

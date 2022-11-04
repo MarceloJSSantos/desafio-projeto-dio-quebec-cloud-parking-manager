@@ -1,8 +1,12 @@
 package br.marcelojssantos.cloudparkingmanager.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 
+@Entity
 public class Estacionamento {
+    @Id
     private String id;
     private String licenca;
     private String estado;
@@ -18,6 +22,9 @@ public class Estacionamento {
         this.estado = estado;
         this.modelo = modelo;
         this.cor = cor;
+    }
+
+    public Estacionamento() {
     }
 
     public String getId() {

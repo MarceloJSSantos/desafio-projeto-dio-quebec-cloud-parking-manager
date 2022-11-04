@@ -128,3 +128,24 @@ Ou
     <scope>test</scope>
   <dependency>
   ````
+
+#### Implementando a persistência de dados com JPA
+
+- Acrescentadas as linhas abaixo no ``pom.xml``
+  ````xml
+  <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-jpa</artifactId>
+  </dependency>
+
+  <dependency>
+    <groupId>org.postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+  </dependency>
+  ````
+  **nota: Como não possuia o Docker na máquina do projeto, adequei usando o bd H2 com persistência em arquivo**
+- Incluída a anotação ``@Entity`` na classe modelo (Estacionamento) e as anotações ncessárias nos atributos;
+- Criada a interface ``Repository``;
+- Refatorada a ``Service`` para usar a ``Repository``;
+- Incluída a ``@Transations`` nos métodos na ``Service`` para o Spring gerenciar as transações no BD.
+- 
