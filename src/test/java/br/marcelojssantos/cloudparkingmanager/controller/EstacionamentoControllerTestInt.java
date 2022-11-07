@@ -24,6 +24,8 @@ class EstacionamentoControllerTestInt {
     @Test
     void quandoFindAllEntaoChecaResultado() {
         RestAssured.given()
+                .auth()
+                .basic("usuario", "12345")
                 .when()
                 .get("/estacionamentos")
                 .then()
@@ -31,7 +33,7 @@ class EstacionamentoControllerTestInt {
     }
 
     @Test
-    void qunadoCreateEntaoChecaSeECriado() {
+    void quandoCreateEntaoChecaSeECriado() {
         var createDTO = new EstacionamentoCreateDTO();
         createDTO.setLicenca("LAI-2A45");
         createDTO.setEstado("RJ");
@@ -39,6 +41,8 @@ class EstacionamentoControllerTestInt {
         createDTO.setCor("Branca");
 
         RestAssured.given()
+                .auth()
+                .basic("usuario", "12345")
                 .when()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(createDTO)

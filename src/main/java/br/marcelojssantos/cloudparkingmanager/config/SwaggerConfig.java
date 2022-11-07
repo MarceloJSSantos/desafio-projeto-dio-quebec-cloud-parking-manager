@@ -1,36 +1,66 @@
 package br.marcelojssantos.cloudparkingmanager.config;
 
-import io.swagger.v3.oas.annotations.ExternalDocumentation;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.info.Contact;
-import io.swagger.v3.oas.annotations.info.Info;
-import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.*;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@Configuration
-@OpenAPIDefinition(info = @Info(
-        title = "Gerenciador de estacionamento em Nuvem",
-        description = "API REST",
-        version = "1.0.1",
-        contact = @Contact(name = "Marcelo Santos",
-        url = "",email = "email@email.com")))
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+@Component
+@EnableSwagger2
 public class SwaggerConfig {
-//    @Bean
-//    public GroupedOpenApi publicApi() {
-//        return GroupedOpenApi.builder()
-//                .group("springshop-public")
-//                .packagesToScan("br.marcelojssantos.cloudparkingmanager.controller")
-//                .pathsToMatch("/**")
-//                .build();
-//    }
-//
-//    @Bean
-//    public GroupedOpenApi adminApi() {
-//        return GroupedOpenApi.builder()
-//                .group("springshop-admin")
-//                .pathsToMatch("/admin/**")
-//                .build();
-//    }
 
+    @Bean
+    public Docket getDocket() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("br.marcelojssantos.cloudparkingmanager.controller"))
+                .build()
+                .apiInfo(metaData())
+                .securityContexts(Arrays.asList(actuatorSecurityContext()))
+                .securitySchemes(Arrays.asList(basicAuthScheme()));
+    }
+
+    private SecurityContext actuatorSecurityContext() {
+        return SecurityContext.builder()
+                .securityReferences(Arrays.asList(basicAuthReference()))
+                .build();
+    }
+
+    private SecurityScheme basicAuthScheme() {
+        return new BasicAuth("basicAuth");
+    }
+
+    private SecurityReference basicAuthReference() {
+        return new SecurityReference("basicAuth", new AuthorizationScope[0]);
+    }
+
+    private List<SecurityScheme> basicScheme() {
+        List<SecurityScheme> schemeList = new ArrayList<>();
+        schemeList.add(new BasicAuth("basicAuth"));
+        return schemeList;
+    }
+
+    private ApiKey apiKey() {
+        return new ApiKey("apiKey", "Authorization", "header");
+    }
+
+    private ApiInfo metaData() {
+        return new ApiInfoBuilder()
+                .title("Gerenciador de estacionamento em Nuvem")
+                .description("PI REST")
+                .version("1.0.3")
+                .license("Apache License Version 2.0")
+                .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0\"")
+                .contact(new Contact("Marcelo Santos", "/", "email@email.com.br"))
+                .build();
+    }
 }

@@ -148,4 +148,35 @@ Ou
 - Criada a interface ``Repository``;
 - Refatorada a ``Service`` para usar a ``Repository``;
 - Incluída a ``@Transations`` nos métodos na ``Service`` para o Spring gerenciar as transações no BD.
-- 
+
+#### Adequando os testes de integração com a persistência de BD usando Testcontainers
+
+- [https://www.testcontainers.org/](https://www.testcontainers.org/)
+  nota: Não feito porque usado BD em memória
+
+#### Implementação de Segurança
+
+- Inclusão das linhas abaixo no ``pom.xml``
+  ````xml
+  <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+  </dependency>
+  ````
+- Usaremos o modo básico, conforme password gerado na iniciação
+- Mas com isso nossos testes integrados começarão a quebrar, por isso, vamos:
+  * Definir uma senha no ``application.properties``
+  * Configurar o ``RestAssured`` (nos testes) com as instruções ``.auth().basic("user", "senha")``
+    ````java
+    ...
+    @Test
+    void quandoFindAllEntaoChecaResultado() {
+        RestAssured.given()
+                .auth()
+                .basic("user", "1234")
+                ...
+    }
+    ````
+    
+- Podemos também criar um classe de configuração do Security ao invés de usarmos o ``application.properties``
+  * Para isso criamos a classe (ex. ``SecurityConfiguration``), anotamos com ``@Configuration`` e ``@EnableWebSecurity``e extendemos de ````
